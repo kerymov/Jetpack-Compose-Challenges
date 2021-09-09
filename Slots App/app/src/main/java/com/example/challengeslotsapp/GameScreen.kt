@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.example.challengeslotsapp.ui.theme.*
 import java.lang.Math.PI
 
+@ExperimentalFoundationApi
 @Composable
 fun GameScreen() {
     Box(
@@ -126,41 +127,62 @@ fun Credits(
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun Slots(
     slots: List<Slot>
 ) {
-    LazyColumn(
+//    LazyColumn(
+//        modifier = Modifier
+//            .fillMaxWidth(),
+//        horizontalAlignment = Alignment.CenterHorizontally,
+//        verticalArrangement = Arrangement.Center
+//    ) {
+//        items(1) {
+//            LazyRow(
+//                horizontalArrangement = Arrangement.Center,
+//                verticalAlignment = Alignment.CenterVertically
+//            ) {
+//                items(3) {
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(
+//                                start = if (it != 0) 5.dp
+//                                else 0.dp,
+//                                end = if (it != slots.lastIndex) 5.dp
+//                                else 0.dp
+//                            )
+//                            .clip(RoundedCornerShape(10.dp))
+//                            .background(White50)
+//                            .padding(10.dp)
+//                            .size(100.dp)
+//                    ) {
+//                        Image(
+//                            imageVector = ImageVector.vectorResource(slots[it].IconId),
+//                            contentDescription = slots[it].name
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//    }
+    LazyVerticalGrid(
+        cells = GridCells.Fixed(3),
         modifier = Modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .fillMaxWidth()
     ) {
-        items(1) {
-            LazyRow(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+        items(slots.size) {
+            Box(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(White50)
+                    .padding(10.dp)
             ) {
-                items(3) {
-                    Box(
-                        modifier = Modifier
-                            .padding(
-                                start = if (it != 0) 5.dp
-                                else 0.dp,
-                                end = if (it != slots.lastIndex) 5.dp
-                                else 0.dp
-                            )
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(White50)
-                            .padding(10.dp)
-                            .size(100.dp)
-                    ) {
-                        Image(
-                            imageVector = ImageVector.vectorResource(slots[it].IconId),
-                            contentDescription = slots[it].name
-                        )
-                    }
-                }
+                Image(
+                    imageVector = ImageVector.vectorResource(slots[it].IconId),
+                    contentDescription = slots[it].name
+                )
             }
         }
     }
@@ -182,6 +204,7 @@ fun Spin() {
     }
 }
 
+@ExperimentalFoundationApi
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
