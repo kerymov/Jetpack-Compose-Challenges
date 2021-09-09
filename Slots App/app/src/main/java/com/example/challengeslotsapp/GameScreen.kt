@@ -28,6 +28,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
@@ -47,19 +48,14 @@ fun GameScreen() {
             .fillMaxSize()
             .background(Orange)
             .drawBehind {
-                drawLine(
-                    color = LightYellow,
-                    start = Offset(size.width * -0.4f, size.height * 0.9f),
-                    end = Offset(size.width * 1.4f, size.height * 0.1f),
-                    strokeWidth = 330.dp.toPx()
-                )
-//                rotate(
-//                    degrees = (45).toFloat()
-//                ) {
-//                    drawRect(
-//                        color = LightYellow
-//                    )
-//                }
+                rotate(degrees = 50f) {
+                    drawLine(
+                        color = LightYellow,
+                        start = Offset(size.width * 0.5f, size.height * 1.5f),
+                        end = Offset(size.width * 0.5f, size.height * -1.5f),
+                        strokeWidth = 330.dp.toPx()
+                    )
+                }
             }
             .padding(horizontal = 15.dp, vertical = 50.dp)
     ) {
@@ -132,40 +128,6 @@ fun Credits(
 fun Slots(
     slots: List<Slot>
 ) {
-//    LazyColumn(
-//        modifier = Modifier
-//            .fillMaxWidth(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        items(1) {
-//            LazyRow(
-//                horizontalArrangement = Arrangement.Center,
-//                verticalAlignment = Alignment.CenterVertically
-//            ) {
-//                items(3) {
-//                    Box(
-//                        modifier = Modifier
-//                            .padding(
-//                                start = if (it != 0) 5.dp
-//                                else 0.dp,
-//                                end = if (it != slots.lastIndex) 5.dp
-//                                else 0.dp
-//                            )
-//                            .clip(RoundedCornerShape(10.dp))
-//                            .background(White50)
-//                            .padding(10.dp)
-//                            .size(100.dp)
-//                    ) {
-//                        Image(
-//                            imageVector = ImageVector.vectorResource(slots[it].IconId),
-//                            contentDescription = slots[it].name
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
     LazyVerticalGrid(
         cells = GridCells.Fixed(3),
         modifier = Modifier
