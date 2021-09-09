@@ -1,15 +1,13 @@
 package com.example.challengeslotsapp
 
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,7 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.rounded.Star
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -39,10 +37,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.challengeslotsapp.ui.theme.*
 import java.lang.Math.PI
+import kotlin.random.Random
 
 @ExperimentalFoundationApi
 @Composable
 fun GameScreen() {
+    var credits by remember {
+        mutableStateOf(1000)
+    }
+    val slotsItems = listOf(
+        Slot("Apple", R.drawable.ic_apple),
+        Slot("Cherry", R.drawable.ic_avocado),
+        Slot("Star", R.drawable.ic_grapes)
+    )
+    var slots by remember {
+        mutableStateOf(slotsItems.toMutableList())
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -65,15 +76,16 @@ fun GameScreen() {
             verticalArrangement = Arrangement.SpaceAround
         ) {
             Title()
-            Credits()
-            Slots(
-                listOf(
-                    Slot("Apple", R.drawable.ic_apple),
-                    Slot("Cherry", R.drawable.ic_avocado),
-                    Slot("Star", R.drawable.ic_grapes)
-                )
+            Credits(credits)
+            Slots(slots)
+            Spin(
+                spin = {
+                    credits -= 100
+                    slots.forEachIndexed { index, _ ->
+                        slots[index] = slotsItems[Random.nextInt(slotsItems.lastIndex)]
+                    }
+                }
             )
-            Spin()
         }
     }
 }
@@ -151,10 +163,13 @@ fun Slots(
 }
 
 @Composable
-fun Spin() {
+fun Spin(
+    spin: () -> Unit
+) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(100))
+            .clickable( onClick = spin )
             .background(ButtonPink)
             .padding(horizontal = 25.dp, vertical = 5.dp)
     ) {
