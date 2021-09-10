@@ -39,20 +39,35 @@ import com.example.challengeslotsapp.ui.theme.*
 import java.lang.Math.PI
 import kotlin.random.Random
 
+fun compare(slots: List<Slot>): Boolean {
+    for (index in slots.indices - slots.lastIndex) {
+        if (slots[index] != slots[index + 1]) {
+            return false
+        }
+    }
+    return true
+}
+
 @ExperimentalFoundationApi
 @Composable
 fun GameScreen() {
     var credits by remember {
         mutableStateOf(1000)
     }
+    val elementsInRow = 3
     val slotsItems = listOf(
         Slot("Apple", R.drawable.ic_apple),
         Slot("Cherry", R.drawable.ic_avocado),
         Slot("Star", R.drawable.ic_grapes)
     )
-    var slots by remember {
+    val slots by remember {
         mutableStateOf(slotsItems.toMutableList())
     }
+    var result by remember {
+        mutableStateOf(false)
+    }
+    val maxWin = 500
+    val minWin = 50
 
     Box(
         modifier = Modifier
@@ -77,13 +92,15 @@ fun GameScreen() {
         ) {
             Title()
             Credits(credits)
-            Slots(slots)
+            Slots(slots, elementsInRow, result)
             Spin(
                 spin = {
-                    credits -= 100
                     slots.forEachIndexed { index, _ ->
                         slots[index] = slotsItems[Random.nextInt(slotsItems.lastIndex)]
                     }
+                    result = compare(slots)
+                    credits += if (result) Random.nextInt(maxWin - minWin) + minWin
+                    else -100
                 }
             )
         }
@@ -138,10 +155,12 @@ fun Credits(
 @ExperimentalFoundationApi
 @Composable
 fun Slots(
-    slots: List<Slot>
+    slots: List<Slot>,
+    elementsInRow: Int = 3,
+    result: Boolean
 ) {
     LazyVerticalGrid(
-        cells = GridCells.Fixed(3),
+        cells = GridCells.Fixed(elementsInRow),
         modifier = Modifier
             .fillMaxWidth()
     ) {
@@ -150,7 +169,10 @@ fun Slots(
                 modifier = Modifier
                     .padding(5.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .background(White50)
+                    .background(
+                        if (result) Green50
+                        else White50
+                    )
                     .padding(10.dp)
             ) {
                 Image(
@@ -169,7 +191,7 @@ fun Spin(
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(100))
-            .clickable( onClick = spin )
+            .clickable(onClick = spin)
             .background(ButtonPink)
             .padding(horizontal = 25.dp, vertical = 5.dp)
     ) {
