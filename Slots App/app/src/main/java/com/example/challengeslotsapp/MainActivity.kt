@@ -17,7 +17,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ChallengeSlotsAppTheme {
-                GameScreen()
+                val lineMode = GameMode(3, 1)
+                val squareMode = GameMode(3, 3)
+                GameScreen(squareMode)
             }
         }
     }
