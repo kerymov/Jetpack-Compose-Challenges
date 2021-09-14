@@ -14,3 +14,4 @@ val ButtonPink = Color(0xFFF8367C)
 val TextWhite = Color.White
 val TextBlack = Color.Black
 val White50 = Color(0x80FFFFFF)
+val Green50 = Color(0x804ca64c)
