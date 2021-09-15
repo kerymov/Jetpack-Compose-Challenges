@@ -2,7 +2,9 @@ package com.example.challengeslotsapp
 
 class SlotsWinningCombinationsChecker(private val slots: List<List<Slot>>) {
 
-    fun check(): Pair<List<Pair<Int, Int>>, Int> {
+    fun checkLine() = checkRows(slots)
+
+    fun checkSquare(): Pair<List<Pair<Int, Int>>, Int> {
         val (wonRows, amountOfWonRows) = checkRows(slots)
         val (wonColumns, amountOfWonColumns) = checkColumns(slots)
         val (wonDiagonals, amountOfWonDiagonals) = checkDiagonals(slots)

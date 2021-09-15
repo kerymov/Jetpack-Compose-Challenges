@@ -37,9 +37,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ChallengeSlotsAppTheme {
-                val lineMode = GameMode(3, 1)
-                val squareMode = GameMode(3, 3)
-                GameScreen(squareMode)
+                val lineMode = GameMode("Line", 3, 1)
+                val squareMode = GameMode("Square", 3, 3)
+                GameScreen(lineMode)
             }
         }
     }
@@ -94,8 +94,14 @@ class MainActivity : ComponentActivity() {
                     spin = {
                         val spunSlots = SlotsGenerator(slots, slotItems).generateRandomSlots()
 
-                        val (wonSlotsCoordinates, amountOfWonLines) = SlotsWinningCombinationsChecker(spunSlots).check()
-                        slots = WinningPositionsSetter(wonSlotsCoordinates, spunSlots).setWinningPositions()
+                        val (wonSlotsCoordinates, amountOfWonLines) =
+                            if (gameMode.name == "Line") SlotsWinningCombinationsChecker(spunSlots).checkLine()
+                            else SlotsWinningCombinationsChecker(spunSlots).checkSquare()
+
+                        slots = WinningPositionsSetter(
+                            wonSlotsCoordinates,
+                            spunSlots
+                        ).setWinningPositions()
 
                         credits -= 100
                         credits += amountOfWonLines * (Random.nextInt(maxWin - minWin) + minWin)
@@ -207,7 +213,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     private fun DefaultPreview() {
         ChallengeSlotsAppTheme {
-            GameScreen(GameMode(3, 1))
+            GameScreen(GameMode("Square", 3, 3))
         }
     }
 }
