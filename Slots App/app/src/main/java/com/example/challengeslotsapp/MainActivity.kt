@@ -44,16 +44,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun setWinningPositions(wonLines: List<Pair<Int, Int>>, spunSlots: List<List<Slot>>): List<List<Slot>> {
-        val checkedSlots = spunSlots.toMutableList().map { it.toMutableList() }
-        wonLines.forEach { indexes ->
-            val i = indexes.first
-            val j = indexes.second
-            checkedSlots[i][j] = spunSlots[i][j].copy(isWin = true)
-        }
-        return checkedSlots
-    }
-
     @ExperimentalFoundationApi
     @Composable
     private fun GameScreen(
@@ -105,7 +95,7 @@ class MainActivity : ComponentActivity() {
                         val spunSlots = SlotsGenerator(slots, slotItems).generateRandomSlots()
 
                         val (wonSlotsCoordinates, amountOfWonLines) = SlotsWinningCombinationsChecker(spunSlots).check()
-                        slots = setWinningPositions(wonSlotsCoordinates, spunSlots)
+                        slots = WinningPositionsSetter(wonSlotsCoordinates, spunSlots).setWinningPositions()
 
                         credits -= 100
                         credits += amountOfWonLines * (Random.nextInt(maxWin - minWin) + minWin)
