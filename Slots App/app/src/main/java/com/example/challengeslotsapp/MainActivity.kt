@@ -44,16 +44,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun generateRandomSlots(slots: List<List<Slot>>, slotItems: List<Slot>): List<List<Slot>> {
-        val spunSlots = MutableList(slots.size) { slotItems.toMutableList() }
-        slots.forEachIndexed { i, _ ->
-            slots[i].forEachIndexed { j, _ ->
-                spunSlots[i][j] = slotItems[Random.nextInt(slotItems.lastIndex + 1)]
-            }
-        }
-        return spunSlots
-    }
-
     private fun setWinningPositions(wonLines: List<Pair<Int, Int>>, spunSlots: List<List<Slot>>): List<List<Slot>> {
         val checkedSlots = spunSlots.toMutableList().map { it.toMutableList() }
         wonLines.forEach { indexes ->
@@ -112,7 +102,7 @@ class MainActivity : ComponentActivity() {
                 Slots(slots, columns, rows)
                 Spin(
                     spin = {
-                        val spunSlots = generateRandomSlots(slots, slotItems)
+                        val spunSlots = SlotsGenerator(slots, slotItems).generateRandomSlots()
 
                         val (wonSlotsCoordinates, amountOfWonLines) = SlotsWinningCombinationsChecker(spunSlots).check()
                         slots = setWinningPositions(wonSlotsCoordinates, spunSlots)
