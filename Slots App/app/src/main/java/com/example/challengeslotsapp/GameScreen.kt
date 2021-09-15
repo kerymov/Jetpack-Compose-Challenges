@@ -15,67 +15,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.DrawStyle
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.challengeslotsapp.ui.theme.*
-import java.lang.Math.PI
-import java.util.Collections.swap
 import kotlin.random.Random
 
-fun rotate(slots: MutableList<MutableList<Slot>>): MutableList<MutableList<Slot>> {
-    slots.forEachIndexed { i, row ->
-        for (j in i..row.lastIndex) {
-            val temp = slots[i][j]
-            slots[i][j] = slots[j][i]
-            slots[j][i] = temp
+fun generateRandomSlots(slots: List<List<Slot>>, slotItems: List<Slot>): List<List<Slot>> {
+    val spunSlots = MutableList(slots.size) { slotItems.toMutableList() }
+    slots.forEachIndexed { i, _ ->
+        slots[i].forEachIndexed { j, _ ->
+            spunSlots[i][j] = slotItems[Random.nextInt(slotItems.lastIndex + 1)]
         }
     }
-
-    return slots
+    return spunSlots
 }
 
-fun checkRows(slots: MutableList<MutableList<Slot>>): MutableList<MutableList<Slot>> {
-    slots.forEachIndexed { i, row ->
-        if (row.distinctBy { it.name }.size == 1) {
-            row.forEachIndexed { j, _ ->
-                slots[i][j] = slots[i][j].copy(win = true)
-            }
-        }
+fun setWinningPositions(wonLines: List<Pair<Int, Int>>, spunSlots: List<List<Slot>>): List<List<Slot>> {
+    val checkedSlots = spunSlots.toMutableList().map { it.toMutableList() }
+    wonLines.forEach { indexes ->
+        val i = indexes.first
+        val j = indexes.second
+        checkedSlots[i][j] = spunSlots[i][j].copy(isWin = true)
     }
-    return slots
-}
-
-fun checkColumns(slots: MutableList<MutableList<Slot>>) = rotate(checkRows(rotate(slots)))
-
-fun checkDiagonals(slots: MutableList<MutableList<Slot>>): MutableList<MutableList<Slot>> {
-    val diagonalsInRows = MutableList(2) { MutableList(slots.size) { Slot("Apple", R.drawable.ic_apple) } }
-
-    for (i in slots.indices) {
-        diagonalsInRows[0][i] = slots[i][i]
-        diagonalsInRows[1][i] = slots[slots.lastIndex - i][i]
-    }
-
-    if (diagonalsInRows[0].distinctBy { it.name }.size == 1) {
-        for (i in slots.indices) {
-            slots[i][i] = slots[i][i].copy(win = true)
-        }
-    }
-    if (diagonalsInRows[1].distinctBy { it.name }.size == 1) {
-        for (i in slots.indices) {
-            slots[slots.lastIndex - i][i] = slots[slots.lastIndex - i][i].copy(win = true)
-        }
-    }
-    return slots
+    return checkedSlots
 }
 
 @ExperimentalFoundationApi
@@ -92,13 +59,13 @@ fun GameScreen(
         Slot("Grapes", R.drawable.ic_grapes)
     )
     var slots by remember {
-        mutableStateOf(MutableList(rows) { slotItems.toMutableList() })
+        mutableStateOf(List(rows) { slotItems })
     }
     var credits by remember {
         mutableStateOf(1000)
     }
-    val maxWin = 500
-    val minWin = 50
+    val maxWin = 70
+    val minWin = 10
 
     Box(
         modifier = Modifier
@@ -126,17 +93,13 @@ fun GameScreen(
             Slots(slots, columns, rows)
             Spin(
                 spin = {
-                    val spunSlots = MutableList(rows) { slotItems.toMutableList() }
-                    slots.forEachIndexed { i, _ ->
-                        slots[i].forEachIndexed { j, _ ->
-                            spunSlots[i][j] = slotItems[Random.nextInt(slotItems.lastIndex + 1)]
-                        }
-                    }
-                    slots = spunSlots
-                    slots = checkRows(slots)
-                    slots = checkColumns(slots)
-                    slots = checkDiagonals(slots)
-//                    credits += if (result) Random.nextInt(maxWin - minWin) + minWin else -100
+                    val spunSlots = generateRandomSlots(slots, slotItems)
+
+                    val (wonSlotsCoordinates, amountOfWonLines) = SlotsWinningCombinationsChecker(spunSlots).check()
+                    slots = setWinningPositions(wonSlotsCoordinates, spunSlots)
+
+                    credits -= 100
+                    credits += amountOfWonLines * (Random.nextInt(maxWin - minWin) + minWin)
                 }
             )
         }
@@ -208,7 +171,7 @@ fun Slots(
                     .padding(5.dp)
                     .clip(RoundedCornerShape(10.dp))
                     .background(
-                        if (slots[row][column].win) Green50 else White50
+                        if (slots[row][column].isWin) Green50 else White50
                     )
                     .padding(10.dp)
             ) {

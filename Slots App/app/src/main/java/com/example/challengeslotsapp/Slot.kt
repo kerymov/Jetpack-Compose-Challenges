@@ -10,5 +10,5 @@ import androidx.compose.ui.res.vectorResource
 data class Slot(
     val name: String,
     @DrawableRes val IconId: Int,
-    val win: Boolean = false
+    val isWin: Boolean = false
 )
