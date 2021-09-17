@@ -1,5 +1,6 @@
-package com.example.challengeslotsapp
+package com.example.challengeslotsapp.interactors
 
+import com.example.challengeslotsapp.Slot
 import kotlin.random.Random
 
 class SlotsGenerator(private val slots: List<List<Slot>>, private val slotItems: List<Slot>) {

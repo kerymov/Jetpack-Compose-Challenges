@@ -1,4 +1,7 @@
-package com.example.challengeslotsapp
+package com.example.challengeslotsapp.interactors
+
+import com.example.challengeslotsapp.R
+import com.example.challengeslotsapp.Slot
 
 class SlotsWinningCombinationsChecker(private val slots: List<List<Slot>>) {
 

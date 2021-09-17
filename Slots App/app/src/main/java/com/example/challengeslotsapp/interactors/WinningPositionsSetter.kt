@@ -1,4 +1,6 @@
-package com.example.challengeslotsapp
+package com.example.challengeslotsapp.interactors
+
+import com.example.challengeslotsapp.Slot
 
 class WinningPositionsSetter(private val wonLines: List<Pair<Int, Int>>, private val spunSlots: List<List<Slot>>) {
     fun setWinningPositions(): List<List<Slot>> {
