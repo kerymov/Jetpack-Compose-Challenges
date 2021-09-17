@@ -1,6 +1,8 @@
 package com.example.challengeslotsapp
 
 import android.os.Bundle
+import android.view.View
+import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -12,6 +14,7 @@ import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
@@ -23,6 +26,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,17 +39,20 @@ import com.example.challengeslotsapp.interactors.SlotsGenerator
 import com.example.challengeslotsapp.interactors.SlotsWinningCombinationsChecker
 import com.example.challengeslotsapp.interactors.WinningPositionsSetter
 import com.example.challengeslotsapp.ui.theme.*
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 class MainActivity : ComponentActivity() {
     @ExperimentalFoundationApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             ChallengeSlotsAppTheme {
                 val lineMode = GameMode("Line", 1, 3)
                 val squareMode = GameMode("Square", 3, 3)
-                GameScreen(squareMode)
+                GameScreen(lineMode)
             }
         }
     }
@@ -75,6 +83,13 @@ class MainActivity : ComponentActivity() {
                     }
                 }
         ) {
+            val systemUiController = rememberSystemUiController()
+            systemUiController.isStatusBarVisible = false
+            LaunchedEffect(key1 = systemUiController.isStatusBarVisible) {
+                delay(1000)
+                systemUiController.isStatusBarVisible = false
+            }
+
             MediaQuery(Dimensions.Width lessThen 500.dp) {
                 PortraitOrientation(
                     gameMode = gameMode,
@@ -118,7 +133,7 @@ class MainActivity : ComponentActivity() {
             Credits(credits)
             Box(
                 modifier = Modifier
-                .fillMaxWidth()
+                    .fillMaxWidth()
             ) {
                 Slots(slots, rows, columns)
             }
