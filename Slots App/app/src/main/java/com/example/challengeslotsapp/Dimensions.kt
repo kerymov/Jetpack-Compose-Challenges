@@ -7,12 +7,12 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 sealed class Dimensions {
-    object Width: Dimensions()
-    object Height: Dimensions()
+    object Width : Dimensions()
+    object Height : Dimensions()
 
     sealed class DimensionsOperator {
-        object LessThen: DimensionsOperator()
-        object GreaterThen: DimensionsOperator()
+        object LessThen : DimensionsOperator()
+        object GreaterThen : DimensionsOperator()
     }
 
     class DimensionsComparator(

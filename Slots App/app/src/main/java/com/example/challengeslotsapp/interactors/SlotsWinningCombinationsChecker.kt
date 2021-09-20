@@ -18,7 +18,10 @@ class SlotsWinningCombinationsChecker(private val slots: List<List<Slot>>) {
         return Pair(wonLines, amountOfWonLines)
     }
 
-    private fun checkRows(spunSlots: List<List<Slot>>, isRotated: Boolean = false): Pair<List<Pair<Int, Int>>, Int> {
+    private fun checkRows(
+        spunSlots: List<List<Slot>>,
+        isRotated: Boolean = false
+    ): Pair<List<Pair<Int, Int>>, Int> {
         val wonSlots: MutableList<Pair<Int, Int>> = mutableListOf()
         var amountOfWonLines = 0
         spunSlots.forEachIndexed { i, row ->
@@ -66,17 +69,7 @@ class SlotsWinningCombinationsChecker(private val slots: List<List<Slot>>) {
         return Pair(wonSlots, amountOfWonLines)
     }
 
-    private fun rotate(spunSlots: List<List<Slot>>): List<List<Slot>> {
-        val rotatedSlots = spunSlots.toMutableList().map { it.toMutableList() }
-        rotatedSlots.forEachIndexed { i, row ->
-            for (j in i..row.lastIndex) {
-                val temp = rotatedSlots[i][j]
-                rotatedSlots[i][j] = rotatedSlots[j][i]
-                rotatedSlots[j][i] = temp
-            }
-        }
-        rotatedSlots.toList()
-
-        return rotatedSlots
+    private fun rotate(spunSlots: List<List<Slot>>) = spunSlots.mapIndexed { i, row ->
+        row.mapIndexed { j, _ -> spunSlots[j][i] }
     }
 }

@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
             ChallengeSlotsAppTheme {
                 val lineMode = GameMode("Line", 1, 3)
                 val squareMode = GameMode("Square", 3, 3)
-                GameScreen(lineMode)
+                GameScreen(squareMode)
             }
         }
     }
