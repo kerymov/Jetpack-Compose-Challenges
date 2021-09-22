@@ -54,8 +54,8 @@ fun GameScreen() {
         )
 
         val width = constraints.maxWidth.dp
-        if (width > 400.dp) {
-            PortraitOrientation(
+        if (width > 1000.dp) {
+            LandscapeOrientation(
                 firstCard = firstCard,
                 secondCard = secondCard,
                 firstPlayerScore = firstPlayerScore,
@@ -70,7 +70,7 @@ fun GameScreen() {
                 }
             )
         } else {
-            LandscapeOrientation(
+            PortraitOrientation(
                 firstCard = firstCard,
                 secondCard = secondCard,
                 firstPlayerScore = firstPlayerScore,
