@@ -26,14 +26,10 @@ fun Logo() {
 }
 
 @Composable
-fun CardsPanel() {
-    var firstCard by remember {
-        mutableStateOf(Card("Back", 0, R.drawable.back))
-    }
-    var secondCard by remember {
-        mutableStateOf(Card("Back", 0, R.drawable.back))
-    }
-
+fun CardsPanel(
+    firstCard: Card,
+    secondCard: Card
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
@@ -59,28 +55,20 @@ fun CardView(card: Card) {
 }
 
 @Composable
-fun DealButtonView() {
-    val dealButton = DealButton()
-
+fun DealButtonView(deal: () -> Unit) {
     Image(
         painter = painterResource(R.drawable.dealbutton),
         contentDescription = "Deal button",
-        modifier = Modifier.clickable { dealButton.deal() },
+        modifier = Modifier.clickable { deal() },
         alignment = Alignment.Center
     )
 }
 
 @Composable
-fun ScorePanel() {
-    var firstPlayerScore by remember {
-        mutableStateOf(0)
-    }
-    var secondPlayerScore by remember {
-        mutableStateOf(0)
-    }
-    var currentWinner by remember {
-        mutableStateOf(Winner.DRAW)
-    }
+fun ScorePanel(
+    firstPlayerScore: Int,
+    secondPlayerScore: Int
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -96,10 +84,6 @@ fun ScorePanel() {
             score = secondPlayerScore
         )
     }
-
-    if (currentWinner == Winner.FIRST_PLAYER) firstPlayerScore++
-    if (currentWinner == Winner.SECOND_PLAYER) secondPlayerScore++
-
 }
 
 @Composable

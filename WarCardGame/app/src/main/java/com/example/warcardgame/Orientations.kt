@@ -9,20 +9,32 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun PortraitOrientation() {
+fun PortraitOrientation(
+    firstCard: Card,
+    secondCard: Card,
+    firstPlayerScore: Int,
+    secondPlayerScore: Int,
+    deal: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Logo()
-        CardsPanel()
-        DealButtonView()
-        ScorePanel()
+        CardsPanel(firstCard, secondCard)
+        DealButtonView(deal)
+        ScorePanel(firstPlayerScore, secondPlayerScore)
     }
 }
 
 @Composable
-fun LandscapeOrientation() {
+fun LandscapeOrientation(
+    firstCard: Card,
+    secondCard: Card,
+    firstPlayerScore: Int,
+    secondPlayerScore: Int,
+    deal: () -> Unit
+) {
 
 }
